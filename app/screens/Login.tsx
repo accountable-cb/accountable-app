@@ -6,30 +6,25 @@ import {
   ActivityIndicator,
   Button,
   KeyboardAvoidingView,
-  Image,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { FIREBASE_AUTH } from "../../FirebaseConfig";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Plant1 from "../../assets/plant1.svg";
 import Plant2 from "../../assets/plant2.svg";
 import BackgroundPattern from "../../assets/background1.svg";
+import { useAuth } from "../../AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const auth = FIREBASE_AUTH;
+  const { signIn, signUp } = useAuth();
 
-  const signIn = async () => {
+  const login = async () => {
     setLoading(true);
     try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
+      const response = signIn(email, password);
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -39,15 +34,10 @@ const Login = () => {
     }
   };
 
-  const signUp = async () => {
+  const createAccount = async () => {
     setLoading(true);
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log(response);
+      signUp(email, password);
       alert("Check your email");
     } catch (error) {
       console.log(error);
@@ -88,8 +78,10 @@ const Login = () => {
               <ActivityIndicator size="large" color="#0000ff" />
             ) : (
               <>
-                <Button title="Login" onPress={signIn} />
-                <Button title="Create Account" onPress={signUp} />
+                <TouchableOpacity style={styles.bottomButton} onPress={login}>
+                  <Text style={styles.bottomButtonText}>Login</Text>
+                </TouchableOpacity>
+                <Button title="Create Account" onPress={createAccount} />
               </>
             )}
           </KeyboardAvoidingView>
@@ -147,5 +139,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 32,
     paddingBottom: 32,
+  },
+  bottomButton: {
+    backgroundColor: "#4CAF50", // Green background
+    padding: 20,
+    borderRadius: 30,
+    marginTop: 30,
+    marginBottom: 30,
+    alignItems: "center",
+  },
+  bottomButtonText: {
+    fontSize: 18,
+    color: "white",
   },
 });
