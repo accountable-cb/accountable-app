@@ -1,5 +1,5 @@
 import Leaves from "../../assets/leaves1.svg";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,8 +10,11 @@ import {
   Button,
 } from "react-native";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
+import { useAuth } from "../../AuthContext";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { FIRESTORE_DB } from "../../FirebaseConfig";
 
-const { width, height } = Dimensions.get("window"); // Get the screen dimensions
+const { width, height } = Dimensions.get("window");
 
 interface SwipeInfo {
   header: string;
@@ -41,7 +44,54 @@ const items: SwipeInfo[] = [
   },
 ];
 
-const Onboarding = () => {
+const Onboarding = ({ navigation }) => {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const scrollRef = React.useRef(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const docSnap = await getDoc(doc(FIRESTORE_DB, "users", user.uid));
+      const userDoc = docSnap.data();
+      console.log(userDoc);
+      console.log("Here" + userDoc.onboarded);
+      if (userDoc.onboarded) {
+        navigation.navigate("LoggedIn");
+      } else {
+        setLoading(false);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const continuePressed = () => {
+    const currentIndex = scrollRef.current.getCurrentIndex();
+    if (currentIndex >= items.length - 1) {
+      completedOnboarding();
+    } else {
+      scrollRef.current.scrollToIndex({
+        index: currentIndex + 1,
+      });
+    }
+  };
+
+  const completedOnboarding = async () => {
+    setDoc(
+      doc(FIRESTORE_DB, "users", user.uid),
+      { onboarded: true },
+      { merge: true }
+    );
+    navigation.navigate("LoggedIn");
+  };
+
+  if (loading) {
+    return (
+      <>
+        <Text>Loading</Text>
+      </>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={[styles.fullScreenView, styles.backgroundImage]}>
@@ -57,7 +107,12 @@ const Onboarding = () => {
               marginBottom: 50,
             }}
           >
-            <Button title="Skip" />
+            <Button
+              title="Skip"
+              onPress={() => {
+                completedOnboarding();
+              }}
+            />
           </View>
           <SwiperFlatList
             style={styles.swiper}
@@ -80,10 +135,11 @@ const Onboarding = () => {
               </View>
             )}
             showPagination
+            ref={scrollRef}
           />
         </SafeAreaView>
         <View style={{ flexGrow: 1 }}></View>
-        <TouchableOpacity style={styles.bottomButton}>
+        <TouchableOpacity style={styles.bottomButton} onPress={continuePressed}>
           <Text style={styles.bottomButtonText}>Continue</Text>
         </TouchableOpacity>
       </View>
