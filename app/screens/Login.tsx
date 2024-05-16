@@ -12,6 +12,7 @@ import {
 import React, { useState } from "react";
 import { FIREBASE_AUTH } from "../../FirebaseConfig";
 import {
+  UserCredential,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
@@ -19,6 +20,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Plant1 from "../../assets/plant1.svg";
 import Plant2 from "../../assets/plant2.svg";
 import BackgroundPattern from "../../assets/background1.svg";
+import firestore from "../../FirebaseConfig";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -42,12 +44,17 @@ const Login = () => {
   const signUp = async () => {
     setLoading(true);
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log(response);
+      const user = await createUserWithEmailAndPassword(auth, email, password);
+      // const userUid = user.user.uid; // The UID of the user.
+      // const receivedEmail = user.user.email; // The email of the user.
+      // const displayName = user.user.displayName; // The display name of the user.
+
+      // console.log(user);
+      // firestore.collection("users").doc(userUid).set({
+      //   email: receivedEmail,
+      //   displayName: displayName,
+      //   onboarded: false,
+      // });
       alert("Check your email");
     } catch (error) {
       console.log(error);
