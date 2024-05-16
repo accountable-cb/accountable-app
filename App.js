@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "./FirebaseConfig";
 import LoggedIn from "./app/screens/LoggedIn";
+import Onboarding from "./app/screens/Onboarding";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,8 +22,8 @@ export default function App() {
       <Stack.Navigator initialRouteName="Login">
         {user ? (
           <Stack.Screen
-            name="LoggedIn"
-            component={LoggedIn}
+            name="Onboarding"
+            component={Onboarding}
             options={{ headerShown: false }}
           />
         ) : (
