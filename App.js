@@ -1,9 +1,10 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./app/screens/Login";
-import LoggedIn from "./app/screens/LoggedIn";
+import Home from "./app/screens/Home";
 import Onboarding from "./app/screens/Onboarding";
 import { AuthProvider, useAuth } from "./AuthContext";
+import TabNavigator from "./app/screens/TabNavigator";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,8 +21,8 @@ function AppContent() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="LoggedIn"
-            component={LoggedIn}
+            name="TabNavigator"
+            component={TabNavigator}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
