@@ -56,7 +56,7 @@ const Onboarding = ({ navigation }) => {
       console.log(userDoc);
       console.log("Here" + userDoc.onboarded);
       if (userDoc.onboarded) {
-        navigation.navigate("LoggedIn");
+        navigation.navigate("TabNavigator");
       } else {
         setLoading(false);
       }
@@ -81,7 +81,7 @@ const Onboarding = ({ navigation }) => {
       { onboarded: true },
       { merge: true }
     );
-    navigation.navigate("LoggedIn");
+    navigation.navigate("TabNavigator");
   };
 
   if (loading) {
