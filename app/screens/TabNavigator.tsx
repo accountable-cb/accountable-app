@@ -10,12 +10,12 @@ function TabNavigator() {
     <Tab.Navigator>
       <Tab.Screen
         name="Today"
-        component={User}
+        component={Home}
         options={{ headerShown: false }}
       />
       <Tab.Screen
         name="User"
-        component={Home}
+        component={User}
         options={{ headerShown: false }}
       />
     </Tab.Navigator>
