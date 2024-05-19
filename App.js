@@ -5,6 +5,7 @@ import Home from "./app/screens/Home";
 import Onboarding from "./app/screens/Onboarding";
 import { AuthProvider, useAuth } from "./AuthContext";
 import TabNavigator from "./app/screens/TabNavigator";
+import Logger from "./app/screens/Logger";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,16 +16,25 @@ function AppContent() {
     <NavigationContainer>
       {user ? (
         <Stack.Navigator initialRouteName="Onboarding">
-          <Stack.Screen
-            name="Onboarding"
-            component={Onboarding}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="TabNavigator"
-            component={TabNavigator}
-            options={{ headerShown: false }}
-          />
+          <Stack.Group>
+            <Stack.Screen
+              name="Onboarding"
+              component={Onboarding}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="TabNavigator"
+              component={TabNavigator}
+              options={{ headerShown: false }}
+            />
+          </Stack.Group>
+          <Stack.Group screenOptions={{ presentation: "modal" }}>
+            <Stack.Screen
+              name="Logger"
+              component={Logger}
+              options={{ headerShown: false }}
+            />
+          </Stack.Group>
         </Stack.Navigator>
       ) : (
         <Stack.Navigator initialRouteName="Login">
