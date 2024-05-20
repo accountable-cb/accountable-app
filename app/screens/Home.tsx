@@ -1,5 +1,5 @@
 import { Text, Button, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import CalendarStrip from "react-native-calendar-strip";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,9 +9,13 @@ import { useData } from "../contexts/UserDataContext";
 
 const Home = ({ navigation }) => {
   const { user } = useAuth();
-  if (!user) {
-    return navigation.navigate("Login");
-  }
+  useEffect(() => {
+    if (!user) {
+      navigation.navigate("Login");
+    } else if (user.onboarded) {
+      navigation.navigate("TabNavigator");
+    }
+  }, [user, navigation]);
   const { data } = useData();
 
   const [selectedDate, setSelectedDate] = useState(new Date());

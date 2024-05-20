@@ -1,5 +1,5 @@
 import Leaves from "../../assets/leaves1.svg";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -45,11 +45,17 @@ const items: SwipeInfo[] = [
 
 const Onboarding = ({ navigation }) => {
   const { user } = useAuth();
-  if (!user) {
-    return navigation.navigate("Login");
-  }
-  if (user.onboarded) {
-    navigation.navigate("TabNavigator");
+  useEffect(() => {
+    if (!user) {
+      navigation.navigate("Login");
+    } else if (user.onboarded) {
+      navigation.navigate("TabNavigator");
+    }
+  }, [user, navigation]);
+
+  // Early return if user data is not yet available
+  if (!user || user.onboarded === undefined) {
+    return null; // or some loading spinner
   }
 
   const scrollRef = React.useRef(null);

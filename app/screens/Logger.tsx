@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-import FoodCounter from "./FoodCounter";
+import { FoodCounter } from "../components/FoodCounter";
 import { useAuth } from "../contexts/AuthContext";
 import { getDateFromDayNumber, getFormattedDate } from "../utils/date";
 import { FoodLog } from "../types/definitions";

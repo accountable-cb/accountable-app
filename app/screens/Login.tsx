@@ -24,8 +24,7 @@ const Login = () => {
   const login = async () => {
     setLoading(true);
     try {
-      const response = signIn(email, password);
-      console.log(response);
+      signIn(email, password);
     } catch (error) {
       console.log(error);
       alert("Sign in failed " + error.message);

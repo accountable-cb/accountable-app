@@ -18,8 +18,5 @@ export const completeOnboarding = async (userId: string) => {
 };
 
 export const logFood = async (userId: string, log: FoodLog) => {
-  await setDoc(
-    doc(FIRESTORE_DB, "users", userId, "food_logs", log.id.toString()),
-    log
-  );
+  await setDoc(doc(FIRESTORE_DB, "users", userId, "food_logs", log.id), log);
 };

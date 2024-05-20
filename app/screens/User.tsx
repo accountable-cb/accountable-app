@@ -1,13 +1,17 @@
 import { View, Text, Button, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { FIREBASE_AUTH } from "../../FirebaseConfig";
 import { useAuth } from "../contexts/AuthContext";
 
 const User = ({ navigation }) => {
   const { user } = useAuth();
-  if (!user) {
-    return navigation.navigate("Login");
-  }
+  useEffect(() => {
+    if (!user) {
+      navigation.navigate("Login");
+    } else if (user.onboarded) {
+      navigation.navigate("TabNavigator");
+    }
+  }, [user, navigation]);
 
   return (
     <View style={styles.container}>
