@@ -3,8 +3,11 @@ import React from "react";
 import { FIREBASE_AUTH } from "../../FirebaseConfig";
 import { useAuth } from "../contexts/AuthContext";
 
-const User = () => {
+const User = ({ navigation }) => {
   const { user } = useAuth();
+  if (!user) {
+    return navigation.navigate("Login");
+  }
 
   return (
     <View style={styles.container}>
