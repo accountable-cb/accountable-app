@@ -1,5 +1,5 @@
 import Leaves from "../../assets/leaves1.svg";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -11,8 +11,6 @@ import {
 } from "react-native";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import { useAuth } from "../contexts/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
-import { FIRESTORE_DB } from "../../FirebaseConfig";
 import { completeOnboarding } from "../api/firebase";
 
 const { width, height } = Dimensions.get("window");
@@ -47,22 +45,14 @@ const items: SwipeInfo[] = [
 
 const Onboarding = ({ navigation }) => {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const scrollRef = React.useRef(null);
+  if (!user) {
+    return navigation.navigate("Login");
+  }
+  if (user.onboarded) {
+    navigation.navigate("TabNavigator");
+  }
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const docSnap = await getDoc(doc(FIRESTORE_DB, "users", user.id));
-      const userDoc = docSnap.data();
-      console.log(userDoc);
-      if (userDoc.onboarded) {
-        navigation.navigate("TabNavigator");
-      } else {
-        setLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
+  const scrollRef = React.useRef(null);
 
   const continuePressed = () => {
     const currentIndex = scrollRef.current.getCurrentIndex();
@@ -79,14 +69,6 @@ const Onboarding = ({ navigation }) => {
     completeOnboarding(user.id);
     navigation.navigate("TabNavigator");
   };
-
-  if (loading) {
-    return (
-      <>
-        <Text>Loading</Text>
-      </>
-    );
-  }
 
   return (
     <View style={styles.container}>

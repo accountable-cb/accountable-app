@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { FoodLog } from "../types/definitions";
 import { FIRESTORE_DB } from "../../FirebaseConfig";
 
