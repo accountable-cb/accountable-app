@@ -1,83 +1,34 @@
 import { Text, Button, StyleSheet } from "react-native";
-import React, { useEffect, useState } from "react";
-import { FIRESTORE_DB } from "../../FirebaseConfig";
-import { useAuth } from "../../AuthContext";
-import { format } from "date-fns";
-import { collection, onSnapshot } from "firebase/firestore";
+import React, { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 import CalendarStrip from "react-native-calendar-strip";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { setLogLevel } from "firebase/app";
+import { getDaysSinceEpoch } from "../utils/date";
+import { emptyFoodLog } from "../utils/definitions";
+import { useData } from "../contexts/UserDataContext";
 
 const Home = ({ navigation }) => {
   const { user } = useAuth();
-  const [foodLogs, setFoodLogs] = useState({});
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [loading, setLoading] = useState(true);
-
-  const getCurrentFormattedDate = (date: Date) => {
-    return format(date, "yyyy-MM-dd");
-  };
-  const getDaysSinceEpoch = (date: Date) => {
-    const timestamp = date.getTime(); // Get the timestamp in milliseconds
-    const millisecondsPerDay = 1000 * 60 * 60 * 24; // Number of milliseconds in a day
-    return Math.floor(timestamp / millisecondsPerDay); // Convert to days and remove fractional days
-  };
-  function getDateFromDayNumber(dayNum: number) {
-    const millisecondsPerDay = 86400000; // 24 * 60 * 60 * 1000
-    const epochTimeInMs = dayNum * millisecondsPerDay;
-    return new Date(epochTimeInMs);
+  if (!user) {
+    return navigation.navigate("Login");
   }
+  const { data } = useData();
 
-  useEffect(() => {
-    const foodLogsRef = collection(
-      FIRESTORE_DB,
-      "users",
-      user.uid,
-      "food_logs"
-    );
-
-    const unsubscribe = onSnapshot(
-      foodLogsRef,
-      (snapshot) => {
-        const result = {};
-        snapshot.docs.forEach((doc) => {
-          const numId = Number(doc.id);
-          result[numId] = { id: numId, ...doc.data() };
-        });
-        setFoodLogs(result);
-        setLoading(false);
-      },
-      (error) => {
-        // Handle any errors
-        console.error("Error fetching food logs:", error);
-      }
-    );
-
-    return unsubscribe; // Return the unsubscribe function to call when you want to stop listening
-  }, []);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const onDateSelected = (date) => {
     setSelectedDate(new Date(date));
   };
 
-  const emptyFoodLog = () => {
-    return {
-      id: getDaysSinceEpoch(selectedDate),
-      beef: 0,
-      chicken: 0,
-      plant: 0,
-    };
-  };
-
   const getFoodLog = () => {
     const dayFromEpoch = getDaysSinceEpoch(selectedDate);
-    const log = foodLogs[dayFromEpoch];
-    return log ? log : emptyFoodLog();
+    const log = data[dayFromEpoch];
+    return log ? log : emptyFoodLog(selectedDate);
   };
 
   const getLoggedDates = (date) => {
     const dayFromEpoch = getDaysSinceEpoch(new Date(date)).toString();
-    if (Object.keys(foodLogs).includes(dayFromEpoch)) {
+    if (Object.keys(data).includes(dayFromEpoch)) {
       return {
         dots: [
           {
@@ -95,7 +46,7 @@ const Home = ({ navigation }) => {
     return targetDate > currentDate;
   };
 
-  if (loading) {
+  if (data === undefined) {
     return (
       <SafeAreaView style={styles.container}>
         <Text>Loading</Text>

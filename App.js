@@ -3,9 +3,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./app/screens/Login";
 import Home from "./app/screens/Home";
 import Onboarding from "./app/screens/Onboarding";
-import { AuthProvider, useAuth } from "./AuthContext";
+import { AuthProvider, useAuth } from "./app/contexts/AuthContext";
 import TabNavigator from "./app/screens/TabNavigator";
 import Logger from "./app/screens/Logger";
+import { UserDataProvider } from "./app/contexts/UserDataContext";
 
 const Stack = createNativeStackNavigator();
 
