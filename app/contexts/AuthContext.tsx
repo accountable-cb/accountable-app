@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { FIREBASE_AUTH, FIRESTORE_DB } from "../../FirebaseConfig";
+import { FIREBASE_AUTH } from "../../FirebaseConfig";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -36,12 +36,12 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (user) {
-        userDocUnsubscribe = subscribeToUser(user.uid, (snapshot) => {
+        userDocUnsubscribe = subscribeToUser(user.uid, (userDoc) => {
           const userObject = {
-            id: snapshot.id,
-            name: snapshot.data()?.name,
-            email: snapshot.data().email,
-            onboarded: snapshot.data().onboarded,
+            id: user.uid,
+            name: userDoc?.name,
+            email: userDoc.email,
+            onboarded: userDoc.onboarded,
           };
           setUser(userObject);
         });

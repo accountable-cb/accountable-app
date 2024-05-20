@@ -4,7 +4,7 @@ import { useAuth } from "./AuthContext";
 import { subscribeToFoodLogs } from "../api/subscriptions";
 
 interface UserDataContextType {
-  data: { [id: number]: FoodLog };
+  data: { [id: string]: FoodLog };
 }
 
 const UserDataContext = createContext<UserDataContextType | undefined>(
@@ -20,16 +20,15 @@ export const UserDataProvider = ({ children }) => {
     return null;
   }
 
-  const [data, setData] = useState<{ [id: number]: FoodLog } | undefined>(
+  const [data, setData] = useState<{ [id: string]: FoodLog } | undefined>(
     undefined
   );
 
   useEffect(() => {
-    const subscription = subscribeToFoodLogs(user.id, (snapshot) => {
-      const result = { data: {} };
-      snapshot.docs.forEach((doc) => {
-        const numId = Number(doc.id);
-        result[numId] = { id: numId, ...doc.data() };
+    const subscription = subscribeToFoodLogs(user.id, (foodLogs) => {
+      const result = {};
+      foodLogs.forEach((doc) => {
+        result[doc.id] = doc;
       });
       setData(result);
     });

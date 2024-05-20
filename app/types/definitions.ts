@@ -1,3 +1,5 @@
+import { getDateFromDayNumber, getFormattedDate } from "../utils/date";
+
 export interface User {
   id: string;
   email: string;
@@ -6,9 +8,16 @@ export interface User {
 }
 
 export interface FoodLog {
-  id: number;
-  date: string;
+  id: string;
   beef: number;
   chicken: number;
   plant: number;
 }
+
+export const daysSinceEpoch = (log: FoodLog): number => {
+  return Number(log.id);
+};
+
+export const logDate = (log: FoodLog): string => {
+  return getFormattedDate(getDateFromDayNumber(daysSinceEpoch(log)));
+};
