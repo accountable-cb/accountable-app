@@ -1,7 +1,7 @@
 import { View, Text, Button, StyleSheet } from "react-native";
 import React from "react";
 import { FIREBASE_AUTH } from "../../FirebaseConfig";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 const User = () => {
   const { user } = useAuth();

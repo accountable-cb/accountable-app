@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import Plant1 from "../../assets/plant1.svg";
 import Plant2 from "../../assets/plant2.svg";
 import BackgroundPattern from "../../assets/background1.svg";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");

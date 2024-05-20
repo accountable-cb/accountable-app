@@ -1,55 +1,42 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import FoodCounter from "./FoodCounter";
-import { doc, setDoc } from "firebase/firestore";
-import { FIRESTORE_DB } from "../../FirebaseConfig";
-import { useAuth } from "../../AuthContext";
-import { format } from "date-fns";
+import { useAuth } from "../contexts/AuthContext";
+import { getDateFromDayNumber, getFormattedDate } from "../utils/date";
+import { FoodLog } from "../types/definitions";
+import { logFood } from "../api/firebase";
 
-interface Log {
-  id: number;
-  beef: number;
-  chicken: number;
-  plant: number;
-}
 const Logger = ({ route, navigation }) => {
   const { log } = route.params;
   const { user } = useAuth();
-  const [beef, setBeef] = useState(log.beef);
-  const [chicken, setChicken] = useState(log.chicken);
-  const [plant, setPlant] = useState(log.plant);
+  const [workingLog, setWorkingLog] = useState<FoodLog>(log);
 
-  const getFormattedDate = (date: Date) => {
-    return format(date, "yyyy-MM-dd");
-  };
-  function getDateFromDayNumber(dayNum: number) {
-    const millisecondsPerDay = 86400000; // 24 * 60 * 60 * 1000
-    const epochTimeInMs = dayNum * millisecondsPerDay;
-    return new Date(epochTimeInMs);
-  }
-
-  const decrement = (amount: number, setter: (newAmount: number) => void) => {
+  const increment = (attr: string) => {
     return () => {
-      if (amount > 0) {
-        setter(amount - 1);
-      }
-    };
-  };
-  const increment = (amount: number, setter: (newAmount: number) => void) => {
-    return () => {
-      setter(amount + 1);
+      setWorkingLog((prevLog) => {
+        const newLog = {
+          ...prevLog,
+          [attr]: (prevLog[attr] || 0) + 1,
+        };
+        return newLog;
+      });
     };
   };
 
-  const logFood = async () => {
-    await setDoc(
-      doc(FIRESTORE_DB, "users", user.uid, "food_logs", log.id.toString()),
-      {
-        beef,
-        chicken,
-        plant,
-      }
-    );
+  const decrement = (attr: string) => {
+    return () => {
+      setWorkingLog((prevLog) => {
+        const newLog = {
+          ...prevLog,
+          [attr]: Math.max((prevLog[attr] || 0) - 1, 0),
+        };
+        return newLog;
+      });
+    };
+  };
+
+  const logFoodLog = async () => {
+    logFood(user.id, workingLog);
     navigation.goBack();
   };
 
@@ -58,23 +45,23 @@ const Logger = ({ route, navigation }) => {
       <Text>{getFormattedDate(getDateFromDayNumber(log.id))}</Text>
       <FoodCounter
         name="Beef"
-        count={beef}
-        decrement={decrement(beef, setBeef)}
-        increment={increment(beef, setBeef)}
+        count={workingLog.beef}
+        decrement={decrement("beef")}
+        increment={increment("beef")}
       />
       <FoodCounter
         name="Chicken"
-        count={chicken}
-        decrement={decrement(chicken, setChicken)}
-        increment={increment(chicken, setChicken)}
+        count={workingLog.chicken}
+        decrement={decrement("chicken")}
+        increment={increment("chicken")}
       />
       <FoodCounter
         name="Plant"
-        count={plant}
-        decrement={decrement(plant, setPlant)}
-        increment={increment(plant, setPlant)}
+        count={workingLog.plant}
+        decrement={decrement("plant")}
+        increment={increment("plant")}
       />
-      <TouchableOpacity onPress={logFood}>
+      <TouchableOpacity onPress={logFoodLog}>
         <Text>Submit</Text>
       </TouchableOpacity>
     </View>

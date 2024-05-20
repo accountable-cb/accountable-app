@@ -10,9 +10,10 @@ import {
   Button,
 } from "react-native";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
-import { useAuth } from "../../AuthContext";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { useAuth } from "../contexts/AuthContext";
+import { doc, getDoc } from "firebase/firestore";
 import { FIRESTORE_DB } from "../../FirebaseConfig";
+import { completeOnboarding } from "../api/firebase";
 
 const { width, height } = Dimensions.get("window");
 
@@ -51,10 +52,9 @@ const Onboarding = ({ navigation }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const docSnap = await getDoc(doc(FIRESTORE_DB, "users", user.uid));
+      const docSnap = await getDoc(doc(FIRESTORE_DB, "users", user.id));
       const userDoc = docSnap.data();
       console.log(userDoc);
-      console.log("Here" + userDoc.onboarded);
       if (userDoc.onboarded) {
         navigation.navigate("TabNavigator");
       } else {
@@ -76,11 +76,7 @@ const Onboarding = ({ navigation }) => {
   };
 
   const completedOnboarding = async () => {
-    setDoc(
-      doc(FIRESTORE_DB, "users", user.uid),
-      { onboarded: true },
-      { merge: true }
-    );
+    completeOnboarding(user.id);
     navigation.navigate("TabNavigator");
   };
 
