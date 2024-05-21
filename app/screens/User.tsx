@@ -15,7 +15,6 @@ const User = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>USER</Text>
       <Text>{user.email}</Text>
       <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
     </View>

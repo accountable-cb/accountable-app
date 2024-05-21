@@ -4,6 +4,7 @@ import User from "./User";
 import Home from "./Home";
 import { UserDataProvider } from "../contexts/UserDataContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import Progress from "./Progress";
 
 const Tab = createBottomTabNavigator();
 
@@ -24,6 +25,17 @@ function TabNavigator() {
             tabBarLabel: "Today",
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="calendar" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Progress"
+          component={Progress}
+          options={{
+            headerShown: false,
+            tabBarLabel: "Progress",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="bar-chart" color={color} size={size} />
             ),
           }}
         />

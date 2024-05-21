@@ -1,5 +1,4 @@
 import {
-  Button,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,10 +8,11 @@ import {
 import React, { useState } from "react";
 import { FoodCounter } from "../components/FoodCounter";
 import { useAuth } from "../contexts/AuthContext";
-import { getDateFromDayNumber, getFormattedDate } from "../utils/date";
 import { FoodLog } from "../types/definitions";
 import { logFood } from "../api/firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { food } from "../data/food";
+import { emptyFoodLog } from "../utils/definitions";
 
 const Logger = ({ route, navigation }) => {
   const { log } = route.params;
@@ -33,16 +33,19 @@ const Logger = ({ route, navigation }) => {
 
   const clearAll = () => {
     setWorkingLog({
+      ...emptyFoodLog(new Date()),
       id: workingLog.id,
-      beef: 0,
-      chicken: 0,
-      plant: 0,
     });
   };
 
   const logFoodLog = async () => {
     logFood(user.id, workingLog);
     navigation.goBack();
+  };
+
+  const capitalizeFirstLetter = (input: string): string => {
+    if (!input) return input; // return the original string if it's empty
+    return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
   };
 
   return (
@@ -54,21 +57,16 @@ const Logger = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <FoodCounter
-          name="Beef"
-          count={workingLog.beef}
-          increment={increment("beef")}
-        />
-        <FoodCounter
-          name="Chicken"
-          count={workingLog.chicken}
-          increment={increment("chicken")}
-        />
-        <FoodCounter
-          name="Plant"
-          count={workingLog.plant}
-          increment={increment("plant")}
-        />
+        {Object.keys(food).map((foodName) => {
+          return (
+            <FoodCounter
+              key={foodName}
+              name={capitalizeFirstLetter(foodName)}
+              count={workingLog[foodName]}
+              increment={increment(foodName)}
+            />
+          );
+        })}
       </ScrollView>
       <TouchableOpacity style={styles.bottomButton} onPress={logFoodLog}>
         <Text style={styles.bottomButtonText}>Submit</Text>

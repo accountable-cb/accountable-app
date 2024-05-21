@@ -1,3 +1,4 @@
+import { food } from "../data/food";
 import { getDateFromDayNumber, getFormattedDate } from "../utils/date";
 
 export interface User {
@@ -7,12 +8,13 @@ export interface User {
   onboarded: boolean;
 }
 
-export interface FoodLog {
+type Foods = keyof typeof food;
+
+export type FoodLog = {
   id: string;
-  beef: number;
-  chicken: number;
-  plant: number;
-}
+} & {
+  [K in Foods]: number;
+};
 
 export const daysSinceEpoch = (log: FoodLog): number => {
   return Number(log.id);
