@@ -13,6 +13,16 @@ export const food = {
     categorie: "meat",
     color: "#ffb300",
   },
+  pork: {
+    CO2E: 2.5,
+    categorie: "meat",
+    color: "#ff9100",
+  },
+  fish: {
+    CO2E: 1.75,
+    categorie: "meat",
+    color: "#ff9100",
+  },
   dairy: {
     CO2E: 1.5,
     categorie: "dairy & eggs",
