@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import CalendarStrip from "react-native-calendar-strip";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getDaysSinceEpoch } from "../utils/date";
+import {
+  getDateFromDayNumber,
+  getDaysSinceEpoch,
+  getFormattedDate,
+} from "../utils/date";
 import { emptyFoodLog } from "../utils/definitions";
 import { useData } from "../contexts/UserDataContext";
 
@@ -30,18 +34,18 @@ const Home = ({ navigation }) => {
     return log ? log : emptyFoodLog(selectedDate);
   };
 
-  const getLoggedDates = (date) => {
-    const dayFromEpoch = getDaysSinceEpoch(new Date(date)).toString();
-    if (Object.keys(data).includes(dayFromEpoch)) {
+  const markedDatesArray = () => {
+    const result = Object.keys(data).map((dayFromEpoch) => {
       return {
+        date: getFormattedDate(getDateFromDayNumber(Number(dayFromEpoch))),
         dots: [
           {
             color: "green",
           },
         ],
       };
-    }
-    return {};
+    });
+    return result;
   };
 
   const blacklistDates = (date) => {
@@ -73,7 +77,7 @@ const Home = ({ navigation }) => {
         }}
         selectedDate={selectedDate}
         onDateSelected={onDateSelected}
-        markedDates={getLoggedDates}
+        markedDates={markedDatesArray()}
         datesBlacklist={blacklistDates}
       />
 
