@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import PieChart from "react-native-pie-chart";
 import { FoodLog } from "../types/definitions";
+import { food } from "../data/food";
 
 const { width } = Dimensions.get("window");
 const PIE_SIZE = width * 0.8; // Adjust size as needed
@@ -19,13 +20,28 @@ interface PieChartProps {
   logMeal: () => void;
 }
 const PieChartWithButton = (props: PieChartProps) => {
+  const isEmptySeries = (series: number[]): boolean => {
+    return series.every((n) => {
+      return n === 0;
+    });
+  };
+  const seriesAndColor: [number[], string[]] = [[], []];
+  Object.keys(food).forEach((key) => {
+    seriesAndColor[0].push(props.log[key]);
+    seriesAndColor[1].push(food[key].color);
+  });
   return (
     <View style={styles.container}>
-      <PieChart
-        widthAndHeight={PIE_SIZE}
-        series={[props.log.beef, props.log.chicken, props.log.plant]}
-        sliceColor={["#fbd203", "#ffb300", "#ff9100"]}
-      />
+      {!isEmptySeries(seriesAndColor[0]) ? (
+        <PieChart
+          widthAndHeight={PIE_SIZE}
+          series={seriesAndColor[0]}
+          sliceColor={seriesAndColor[1]}
+        />
+      ) : (
+        <></>
+      )}
+
       <View
         style={[
           styles.buttonContainer,

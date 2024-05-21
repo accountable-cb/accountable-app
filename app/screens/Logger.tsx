@@ -1,5 +1,4 @@
 import {
-  Button,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,6 +12,7 @@ import { FoodLog } from "../types/definitions";
 import { logFood } from "../api/firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { food } from "../data/food";
+import { emptyFoodLog } from "../utils/definitions";
 
 const Logger = ({ route, navigation }) => {
   const { log } = route.params;
@@ -33,10 +33,8 @@ const Logger = ({ route, navigation }) => {
 
   const clearAll = () => {
     setWorkingLog({
+      ...emptyFoodLog(new Date()),
       id: workingLog.id,
-      beef: 0,
-      chicken: 0,
-      plant: 0,
     });
   };
 
@@ -59,7 +57,7 @@ const Logger = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {food.map((foodName) => {
+        {Object.keys(food).map((foodName) => {
           return (
             <FoodCounter
               key={foodName}
