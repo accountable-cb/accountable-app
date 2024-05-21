@@ -1,7 +1,7 @@
-import { Text, Button, StyleSheet } from "react-native";
+import { Text, Button, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import CalendarStrip from "react-native-calendar-strip";
+import CalendarStrip, { TDateRange } from "react-native-calendar-strip";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   getDateFromDayNumber,
@@ -10,6 +10,8 @@ import {
 } from "../utils/date";
 import { emptyFoodLog } from "../utils/definitions";
 import { useData } from "../contexts/UserDataContext";
+import moment from "moment";
+import PieChartWithButton from "../components/Pie";
 
 const Home = ({ navigation }) => {
   const { user } = useAuth();
@@ -48,10 +50,11 @@ const Home = ({ navigation }) => {
     return result;
   };
 
-  const blacklistDates = (date) => {
-    const currentDate = new Date();
-    const targetDate = new Date(date);
-    return targetDate > currentDate;
+  const blacklistDates = (): TDateRange[] => {
+    const start = moment().add(1, "days");
+    const end = moment(start).add(1, "year");
+
+    return [{ start, end }];
   };
 
   if (data === undefined) {
@@ -78,19 +81,19 @@ const Home = ({ navigation }) => {
         selectedDate={selectedDate}
         onDateSelected={onDateSelected}
         markedDates={markedDatesArray()}
-        datesBlacklist={blacklistDates}
+        // datesBlacklist={blacklistDates()}
       />
 
-      <Text>{JSON.stringify(getFoodLog())}</Text>
-
-      <Button
-        onPress={() =>
-          navigation.navigate("Logger", {
-            log: getFoodLog(),
-          })
-        }
-        title="Log"
-      />
+      <View style={styles.contentContainer}>
+        <PieChartWithButton
+          log={getFoodLog()}
+          logMeal={() =>
+            navigation.navigate("Logger", {
+              log: getFoodLog(),
+            })
+          }
+        ></PieChartWithButton>
+      </View>
     </SafeAreaView>
   );
 };
@@ -101,5 +104,11 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
     flex: 1,
+  },
+  contentContainer: {
+    marginHorizontal: 20,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
