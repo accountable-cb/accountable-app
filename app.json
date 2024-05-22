@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -31,7 +29,7 @@
         "projectId": "5a5a241d-dd1d-4ff5-af7d-4f1312eab580"
       }
     },
-    "owner": "iankchristie",
+    "owner": "accountable-cb",
     "runtimeVersion": {
       "policy": "appVersion"
     },
