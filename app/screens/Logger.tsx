@@ -11,8 +11,8 @@ import { useAuth } from "../contexts/AuthContext";
 import { FoodLog } from "../types/definitions";
 import { logFood } from "../api/firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { food } from "../data/food";
 import { emptyFoodLog } from "../utils/definitions";
+import { food } from "../data/food";
 
 const Logger = ({ route, navigation }) => {
   const { log } = route.params;
@@ -33,7 +33,7 @@ const Logger = ({ route, navigation }) => {
 
   const clearAll = () => {
     setWorkingLog({
-      ...emptyFoodLog(new Date()),
+      ...emptyFoodLog(),
       id: workingLog.id,
     });
   };
