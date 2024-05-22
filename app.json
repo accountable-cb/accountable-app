@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "accountable-app",
-    "slug": "accountable-app",
+    "slug": "accountable",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,18 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "5a5a241d-dd1d-4ff5-af7d-4f1312eab580"
+      }
+    },
+    "owner": "iankchristie",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/5a5a241d-dd1d-4ff5-af7d-4f1312eab580"
     }
   }
 }
