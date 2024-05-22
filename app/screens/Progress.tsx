@@ -39,6 +39,15 @@ const Progress = () => {
       return getShortFormattedDate(date);
     });
   };
+
+  if (Object.keys(data).length === 0) {
+    return (
+      <SafeAreaView>
+        <Text style={styles.headerText}>Progress</Text>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView>
       <Text style={styles.headerText}>Progress</Text>
