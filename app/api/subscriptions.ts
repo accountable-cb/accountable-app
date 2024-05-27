@@ -1,5 +1,4 @@
 import {
-  DocumentData,
   DocumentSnapshot,
   QuerySnapshot,
   collection,
@@ -22,7 +21,7 @@ export const subscribeToFoodLogs = (
         // It's possible that a field was added to our food schema.
         // In that case it will show up as empty and look bad.
         // We can create an empty Food Log with all fields and merge it with the model from firebase.
-        return { ...emptyFoodLog(new Date()), ...doc.data() } as FoodLog;
+        return { ...emptyFoodLog(), ...doc.data() } as FoodLog;
       });
       callback(logs);
     },

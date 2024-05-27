@@ -83,14 +83,7 @@ const Onboarding = ({ navigation }) => {
       </View>
       <View style={styles.fullScreenView}>
         <SafeAreaView style={styles.foreground}>
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "row-reverse",
-              marginLeft: 48,
-              marginBottom: 50,
-            }}
-          >
+          <View style={styles.skipButtonContainer}>
             <Button
               title="Skip"
               onPress={() => {
@@ -143,6 +136,11 @@ const styles = StyleSheet.create({
   foreground: {
     alignItems: "center",
   },
+  skipButtonContainer: {
+    width: "100%",
+    flexDirection: "row-reverse",
+    paddingHorizontal: 20,
+  },
   swiper: {
     height: 200,
     width: width,
@@ -151,9 +149,10 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     flexWrap: "wrap",
     width: width,
+    paddingHorizontal: 20,
   },
   bottomButton: {
-    backgroundColor: "#4CAF50", // Green background
+    backgroundColor: "#4CAF50",
     padding: 20,
     borderRadius: 30,
     marginBottom: 30,
